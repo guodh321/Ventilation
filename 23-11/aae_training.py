@@ -172,11 +172,22 @@ num_sample = 10
 
 nth_sensor = 5
 
+# def predict_coding(initial_pred, real_coding, i):
+#     loss = []
+#     for epoch in range(20):
+#         decoder_output = autoencoder.predict(X_train_4d[i*scaler].reshape((1, ntimes, train_ct.shape[2], 1)))
+#         loss.append(mse_loss(real_coding, decoder_output[:,:(ntimes - 1),:,:]).numpy())
+#         initial_pred[:,(ntimes - 1):,:,:] = decoder_output[:,(ntimes - 1):,:,:]
+
+#     return decoder_output,loss
+
 def predict_coding(initial_pred, real_coding, i):
+    initial_pred = initial_pred.copy()
     loss = []
     for epoch in range(20):
-        decoder_output = autoencoder.predict(X_train_4d[i*scaler].reshape((1, ntimes, train_ct.shape[2], 1)))
+        decoder_output = autoencoder.predict(initial_pred)
         loss.append(mse_loss(real_coding, decoder_output[:,:(ntimes - 1),:,:]).numpy())
+        # print(loss[-1])
         initial_pred[:,(ntimes - 1):,:,:] = decoder_output[:,(ntimes - 1):,:,:]
 
     return decoder_output,loss
