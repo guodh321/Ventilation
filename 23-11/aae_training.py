@@ -12,15 +12,12 @@ os.environ["CUDA_VISIBLE_DEVICES"] = f"{5}"
 import numpy as np
 import joblib
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.models import load_model
 sys.path.append(".")
 import tools as t
 
 os.environ["CUDA_VISIBLE_DEVICES"] = f"{0}"
-# from tools import Data_preprocessing as t
 
 # *************values setting***********
 root_path = "/home/dg321/gitTest/PRI/irp/Ventilation/direk"
@@ -68,8 +65,6 @@ g_optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate_ae)
 
 d_optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate_d)
 
-# Notice the use of `tf.function` for speeding up calculation
-# This annotation causes the function to be "compiled".
 @tf.function
 def train_step(batch):
     # Autoencoder update
@@ -142,10 +137,9 @@ print(reconstruction[-1])
 fig, ax = plt.subplots(1,1, figsize=[20,10])
 ax.plot(hist)
 ax.legend(['loss_enc', 'loss_disc'])
-#ax.set_yscale('log')
 ax.grid()
-fig.savefig(root_path + '/data/models/1124_aae_encdis_loss_n{}_e{}_s{}_l{}.png'.format(ntimes, epochs, step, latent_dim))
-plt.close(fig)    # close the figure window
+fig.savefig(root_path + '/models/aae_encdis_loss_n{}_e{}_s{}_l{}.png'.format(ntimes, epochs, step, latent_dim))
+plt.close(fig)
 
 # save loss_reconstruction plot
 fig, ax = plt.subplots(1,1, figsize=[16,8])
@@ -153,18 +147,14 @@ ax.plot(reconstruction)
 ax.legend(['loss_reconstruction'])
 ax.set_yscale('log')
 ax.grid()
-fig.savefig(root_path + '/data/models/1124_aae_recon_loss_n{}_e{}_s{}_l{}.png'.format(ntimes, epochs, step, latent_dim))
-plt.close(fig)    # close the figure window
+fig.savefig(root_path + '/models/aae_recon_loss_n{}_e{}_s{}_l{}.png'.format(ntimes, epochs, step, latent_dim))
+plt.close(fig)
 
 # save trained model
 autoencoder.save(root_path +
-                 '/data/models/1124_aae_ae_n{}_e{}_s{}_l{}.h5'.format(ntimes, epochs, step, latent_dim))
+                 '/models/aae_ae_n{}_e{}_s{}_l{}.h5'.format(ntimes, epochs, step, latent_dim))
 enc_disc.save(root_path +
-              '/data/models/1124_aae_enc_disc_n{}_e{}_s{}_l{}.h5'.format(ntimes, epochs, step, latent_dim))
-
-# autoencoder = load_model(root_path + 'data/models/1124_aae_ae_n{}_e{}_s{}_l{}.h5'.format(ntimes, epochs, step, latent_dim), compile=False)
-
-# encoder, decoder = load_model(root_path + 'data/models/1124_aae_enc_disc_n{}_e{}_s{}_l{}.h5'.format(ntimes, epochs, step, latent_dim)).layers
+              '/models/aae_enc_disc_n{}_e{}_s{}_l{}.h5'.format(ntimes, epochs, step, latent_dim))
 
 # *************Predicting***********
 scaler = 1
@@ -172,22 +162,12 @@ num_sample = 10
 
 nth_sensor = 5
 
-# def predict_coding(initial_pred, real_coding, i):
-#     loss = []
-#     for epoch in range(20):
-#         decoder_output = autoencoder.predict(X_train_4d[i*scaler].reshape((1, ntimes, train_ct.shape[2], 1)))
-#         loss.append(mse_loss(real_coding, decoder_output[:,:(ntimes - 1),:,:]).numpy())
-#         initial_pred[:,(ntimes - 1):,:,:] = decoder_output[:,(ntimes - 1):,:,:]
-
-#     return decoder_output,loss
-
-def predict_coding(initial_pred, real_coding, i):
+def predict_coding(initial_pred, real_coding):
     initial_pred = initial_pred.copy()
     loss = []
     for epoch in range(20):
         decoder_output = autoencoder.predict(initial_pred)
         loss.append(mse_loss(real_coding, decoder_output[:,:(ntimes - 1),:,:]).numpy())
-        # print(loss[-1])
         initial_pred[:,(ntimes - 1):,:,:] = decoder_output[:,(ntimes - 1):,:,:]
 
     return decoder_output,loss
@@ -263,5 +243,5 @@ X_predict = np.array(X_predict)
 
 print(X_predict.shape)
 
-np.save(root_path + '/predictions/1124_X_predict_model{}_prenum{}_10000_16000.npy'.format(epochs, n_pred), X_predict)
+np.save(root_path + '/predictions/X_predict_model{}_prenum{}_10000_16000.npy'.format(epochs, n_pred), X_predict)
 print("finished")

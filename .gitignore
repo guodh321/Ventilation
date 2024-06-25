@@ -1,0 +1,43 @@
+direk/
+direkdata/
+images/
+model/
+nooutputs/output_0129_v1_modelTraining1_torchgan_10000epochs.log
+nooutputs/output_0228_DDPM_modelTraining.log
+nooutputs/output_0228_taming_modelTraining1.log
+output.png
+
+23-11/models/
+
+24-01/checkpoints/
+24-01/checkpoints1/
+24-01/checkpoints2/
+24-01/checkpoints3/
+24-01/checkpoints_0122_latent100/
+24-01/checkpoints_0124_sigmoid/
+24-01/checkpoints_0125_leakyrelu/
+24-01/checkpoints_ae/
+24-01/checkpoints_ae1/
+24-01/checkpoints_ae_0124/
+24-01/checkpoints_simplified/
+24-01/checkpoints_vae_0125_newloss/
+
+24-01/ddpm_fashion.pt
+
+24-01/domain_adaptation/
+24-01/healthy data_3.0 zyshu.csv
+24-01/healthy data_3.0 zyshu.xlsx
+
+24-01/AHU Data 20230410.csv
+
+24-01/mnist/
+24-01/model.pth
+
+24-01/runs/
+24-01/scaler.pkl
+24-01/wandb/
+
+V2/
+
+
+AAE4Ventilation/data_new/6GIC_meeting_room_sensors_2023-11-09.csv
